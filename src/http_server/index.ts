@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as http from 'http';
 import { Server, WebSocket, WebSocketServer } from 'ws';
-import { handleRegistration, handleCreateRoom, handleAddUserToRoom } from '../handlers/index';
+import { handleRegistration, handleCreateRoom, handleAddUserToRoom, handleAddShips } from '../handlers/index';
 
 
 export const httpServer = http.createServer(function (req, res) {
@@ -58,6 +58,9 @@ function handleMessage(ws: any, message: { type: any; data: any; id: any; }, wss
         case 'add_user_to_room':
             handleAddUserToRoom(ws, wss, data);
             break;
+        case 'add_ships':
+            handleAddShips(ws, message);
+            break;    
 
         default:
             console.log(` Неизвестный тип сообщения: ${type}`);

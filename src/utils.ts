@@ -61,6 +61,9 @@ export const getWaitingRooms = () => {
         }));
 };
 
+export const getRoom = (gameId: string) => rooms.find((room) => room.idGame === gameId);
+
+
 export const errRes = {
     type: "error",
     data: { error: true, errorText: "" },

@@ -12,16 +12,18 @@ export const users: User[] = [
   {
     name: 'Test',
     password: 'qwerty',
-    index: '49933e4c-664c-479d-9b1a-c654dc953ee6',
+    index: '12346a4c-123c-123d-1b1e-c123dc123ww1',
     wins: 5,
   }
 ];
 
 
 export interface Room {
+    [x: string]: any;
     roomId: string;
     idGame?:string;
     roomUsers: {
+        [x: string]: any;
         name: string;
         index: string;
         idPlayer?:string;
