@@ -72,8 +72,12 @@ export const getKilledShipBorderCells = (shipCells: any[]) => {
   });
 };
 
-export const sendJsonPlayers = (room: { roomUsers: any[]; }, data: any) => {
-  room.roomUsers.forEach((user: { ws: { send: (arg0: string) => void; }; }) => sendJSON(user.ws, data));
+export const sendJsonPlayers = (room: any, data: any) => {
+    room.roomUsers.forEach((user: any) => {
+        if (user.ws && typeof user.ws.send === 'function') {
+            user.ws.send(JSON.stringify(data));
+        }
+    });
 };
 
 export const removeRoom = (gameId: string) => {

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as http from 'http';
 import { Server, WebSocket, WebSocketServer } from 'ws';
-import { handleRegistration, handleCreateRoom, handleAddUserToRoom, handleAddShips, handleAttack, handleRandomAttack } from '../handlers/index';
+import { handleRegistration, handleCreateRoom, handleAddUserToRoom, handleAddShips, handleAttack, handleRandomAttack, handleSinglePlay } from '../handlers/index';
 
 
 export const httpServer = http.createServer(function (req, res) {
@@ -42,6 +42,10 @@ wss.on('connection', (ws) => {
        
     });
 
+    ws.on("close", () => {
+        console.log(`WS closed`);
+    });
+
 
 });
 
@@ -66,7 +70,9 @@ function handleMessage(ws: any, message: { type: any; data: any; id: any; }, wss
             break;  
         case 'randomAttack':
             handleRandomAttack(ws, wss, message);
-            break;      
+            break;    
+        case "single_play":
+            return handleSinglePlay(ws);      
 
         default:
             console.log(` Неизвестный тип сообщения: ${type}`);
@@ -74,4 +80,16 @@ function handleMessage(ws: any, message: { type: any; data: any; id: any; }, wss
     }
 }
 
+
+function shutdown() {
+    for (const client of wss.clients) {
+        try {
+            client.close(1001, "Server shutting down");
+        } catch { }
+    }
+    httpServer.close(() => process.exit(0));
+}
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
 

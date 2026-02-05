@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { rooms, User, users } from "../db";
+import { Room, rooms, User, users } from "../db";
 import { WebSocket, WebSocketServer } from 'ws';
 
 export const getRandomUUID = () => crypto.randomUUID();
@@ -15,7 +15,7 @@ export const createUser = (userData: {name: string, password: string}): User => 
 };
 
 export const createRoom = (user: User, ws: any) => {
-    const room = {
+    const room: Room = {
         roomId: crypto.randomUUID(),
         roomUsers: [{ name: user.name, index: user.index, ws }],
 
