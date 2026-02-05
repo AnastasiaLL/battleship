@@ -1,10 +1,10 @@
-import WebSocket from 'ws';
-import { createUser, getWaitingRooms, sendJSON } from '../utils';
+import WebSocket, { WebSocketServer } from 'ws';
+import { broadcastAll, createUser, getWaitingRooms, getWinnersTable, sendJSON } from '../utils/utils';
 import { users } from '../db';
 
 
 
-export const handleRegistration = (ws: WebSocket, data: string) => {
+export const handleRegistration = (ws: WebSocket, data: string, wss: WebSocketServer) => {
 
     const userData = JSON.parse(data);
 
@@ -30,6 +30,16 @@ export const handleRegistration = (ws: WebSocket, data: string) => {
                 errorText: ''
             }),
             id: 0
+
+
+        };
+
+        const winnersTable = getWinnersTable();
+
+        const updateWinnersRes = {
+            type: "update_winners",
+            data: JSON.stringify(winnersTable),
+            id: 0,
         };
 
         const publicRooms = getWaitingRooms();
@@ -38,7 +48,7 @@ export const handleRegistration = (ws: WebSocket, data: string) => {
             data: JSON.stringify(publicRooms),
             id: 0,
         };
-
+broadcastAll(wss, updateWinnersRes);
     sendJSON(ws, updateRoomRes);
         
         sendJSON(ws, response)

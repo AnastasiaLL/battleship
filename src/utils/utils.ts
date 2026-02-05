@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { rooms, User, users } from "./db";
+import { rooms, User, users } from "../db";
 import { WebSocket, WebSocketServer } from 'ws';
 
 export const getRandomUUID = () => crypto.randomUUID();
@@ -37,15 +37,14 @@ export const addUserToRoom = (user: User, id: string, ws: WebSocket) => {
     });
 };
 
-export const sendJSON = (ws: { send: (arg0: string) => void; }, data: any) => {
+export const sendJSON = (ws: any, data: any) => {
      ws.send(JSON.stringify(data));
 }
 
-export const broadcastAll = (wss: WebSocketServer, message: any) => {
-     wss.clients.forEach(client => {
-        if (client.readyState === 1) { 
-            client.send(message);
-        }
+
+export const broadcastAll = (wss: WebSocketServer, payload: any) => {
+    wss.clients.forEach((client) => {
+        sendJSON(client, payload);
     });
 };
 
@@ -63,6 +62,14 @@ export const getWaitingRooms = () => {
 
 export const getRoom = (gameId: string) => rooms.find((room) => room.idGame === gameId);
 
+export const getWinnersTable = () => {
+  return users
+    .map((user) => ({
+      name: user.name,
+      wins: user.wins || 0,
+    }))
+    .sort((a, b) => b.wins - a.wins);
+};
 
 export const errRes = {
     type: "error",

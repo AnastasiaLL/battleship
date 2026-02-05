@@ -1,6 +1,6 @@
 import { WebSocket, WebSocketServer } from 'ws';
 import { rooms, User } from '../db';
-import { addUserToRoom, broadcastAll, errRes, getRandomUUID, getWaitingRooms, sendJSON } from '../utils';
+import { addUserToRoom, broadcastAll, errRes, getRandomUUID, getWaitingRooms, sendJSON } from '../utils/utils';
 
 export const handleAddUserToRoom = (ws: WebSocket, wss: WebSocketServer, data: string) => {
  

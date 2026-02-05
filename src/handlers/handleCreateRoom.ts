@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws"
-import { broadcastAll, createRoom, errRes, getWaitingRooms, sendJSON } from "../utils"
+import { broadcastAll, createRoom, errRes, getWaitingRooms, sendJSON } from "../utils/utils"
 import { rooms } from "../db"
 
 

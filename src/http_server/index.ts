@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as http from 'http';
 import { Server, WebSocket, WebSocketServer } from 'ws';
-import { handleRegistration, handleCreateRoom, handleAddUserToRoom, handleAddShips } from '../handlers/index';
+import { handleRegistration, handleCreateRoom, handleAddUserToRoom, handleAddShips, handleAttack, handleRandomAttack } from '../handlers/index';
 
 
 export const httpServer = http.createServer(function (req, res) {
@@ -50,7 +50,7 @@ function handleMessage(ws: any, message: { type: any; data: any; id: any; }, wss
     
     switch (type) {
         case 'reg':
-            handleRegistration(ws, data);
+            handleRegistration(ws, data, wss);
             break;
         case 'create_room':
             handleCreateRoom(ws, wss);
@@ -60,7 +60,13 @@ function handleMessage(ws: any, message: { type: any; data: any; id: any; }, wss
             break;
         case 'add_ships':
             handleAddShips(ws, message);
-            break;    
+            break;   
+        case 'attack':
+            handleAttack(ws, wss, message);
+            break;  
+        case 'randomAttack':
+            handleRandomAttack(ws, wss, message);
+            break;      
 
         default:
             console.log(` Неизвестный тип сообщения: ${type}`);
